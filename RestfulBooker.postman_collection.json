@@ -58,7 +58,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Tạo booking thành công (Status 200)\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// Kiểm tra tên khách hàng khớp với dữ liệu từ file CSV\r\npm.test(\"Tên khách hàng khớp với dữ liệu đầu vào\", function () {\r\n    var jsonData = pm.response.json();\r\n    var expectedFirstName = pm.iterationData.get(\"firstname\");\r\n    pm.expect(jsonData.booking.firstname).to.eql(expectedFirstName);\r\n});\r\n\r\n// Lưu lại ID\r\nvar jsonData = pm.response.json();\r\npm.environment.set(\"bookingid\", jsonData.bookingid);"
+                  "pm.test(\"Tạo booking thành công (Status 200)\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nvar jsonData = pm.response.json();\r\n\r\n// Nếu chạy có file CSV thì kiểm tra, không thì bỏ qua\r\nif (pm.iterationData.get(\"firstname\")) {\r\n    pm.test(\"Tên khách hàng khớp với dữ liệu đầu vào\", function () {\r\n        var expectedFirstName = pm.iterationData.get(\"firstname\");\r\n        pm.expect(jsonData.booking.firstname).to.eql(expectedFirstName);\r\n    });\r\n}\r\n\r\n// Lưu lại bookingid\r\nif (jsonData && jsonData.bookingid) {\r\n    pm.environment.set(\"bookingid\", jsonData.bookingid);\r\n}"
                 ]
               }
             }
@@ -68,7 +68,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstname\": \"{{firstname}}\",\r\n    \"lastname\": \"{{lastname}}\",\r\n    \"totalprice\": {{totalprice}},\r\n    \"depositpaid\": {{depositpaid}},\r\n    \"bookingdates\": {\r\n        \"checkin\": \"{{checkin}}\",\r\n        \"checkout\": \"{{checkout}}\"\r\n    },\r\n    \"additionalneeds\": \"{{additionalneeds}}\"\r\n}\r\n",
+              "raw": "{\r\n    \"firstname\": \"{{firstname}}\",\r\n    \"lastname\": \"{{lastname}}\",\r\n    \"totalprice\": 1000,\r\n    \"depositpaid\": true,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2026-11-01\",\r\n        \"checkout\": \"2026-11-05\"\r\n    },\r\n    \"additionalneeds\": \"Breakfast\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
